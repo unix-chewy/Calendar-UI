@@ -1,6 +1,7 @@
 // Calendar functionality
 let currentDate = new Date();
 let events = [];
+let datePickerCurrentDate = new Date();
 
 // DOM Elements
 const calendarGrid = document.getElementById('calendarGrid');
@@ -20,6 +21,15 @@ const cancelEventBtn = document.getElementById('cancelEvent');
 const cancelImportBtn = document.getElementById('cancelImport');
 const eventForm = document.getElementById('eventForm');
 const processImportBtn = document.getElementById('processImport');
+const deleteEventBtn = document.getElementById('deleteEventBtn');
+const monthDropdownTrigger = document.getElementById('currentMonth');
+const datePicker = document.getElementById('datePicker');
+const datePickerMonthYear = document.getElementById('datePickerMonthYear');
+const datePrevMonth = document.getElementById('datePrevMonth');
+const dateNextMonth = document.getElementById('dateNextMonth');
+const datePickerGrid = document.getElementById('datePickerGrid');
+const datePickerToday = document.getElementById('datePickerToday');
+const datePickerClose = document.getElementById('datePickerClose');
 
 // Initialize calendar
 function initCalendar() {
@@ -149,10 +159,102 @@ function showEventDetails(event) {
     categoryBadge.textContent = event.category.charAt(0).toUpperCase() + event.category.slice(1);
     categoryBadge.className = `event-category category-${event.category}`;
     
+    // Store the current event for deletion
+    deleteEventBtn.dataset.eventIndex = events.indexOf(event);
+    
     eventDetailsModal.style.display = 'flex';
     setTimeout(() => {
         eventDetailsModal.classList.add('show');
     }, 10);
+}
+
+// Delete event function
+function deleteEvent(eventIndex) {
+    if (confirm('Are you sure you want to delete this event?')) {
+        events.splice(eventIndex, 1);
+        renderEvents();
+        eventDetailsModal.classList.remove('show');
+        setTimeout(() => {
+            eventDetailsModal.style.display = 'none';
+        }, 300);
+        alert('Event deleted successfully!');
+    }
+}
+
+// Render date picker
+function renderDatePicker() {
+    const year = datePickerCurrentDate.getFullYear();
+    const month = datePickerCurrentDate.getMonth();
+    
+    datePickerMonthYear.textContent = datePickerCurrentDate.toLocaleDateString('en-US', { 
+        month: 'long', 
+        year: 'numeric' 
+    });
+    
+    datePickerGrid.innerHTML = '';
+    
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    
+    // Previous month days
+    const prevMonthLastDay = new Date(year, month, 0).getDate();
+    for (let i = 0; i < startingDay; i++) {
+        const dayElement = createDatePickerDay(prevMonthLastDay - startingDay + i + 1, true);
+        datePickerGrid.appendChild(dayElement);
+    }
+    
+    // Current month days
+    const today = new Date();
+    for (let i = 1; i <= daysInMonth; i++) {
+        const dayElement = createDatePickerDay(i, false);
+        
+        // Check if this day is today
+        if (today.getDate() === i && 
+            today.getMonth() === month && 
+            today.getFullYear() === year) {
+            dayElement.classList.add('today');
+        }
+        
+        // Check if this day is selected
+        if (currentDate.getDate() === i && 
+            currentDate.getMonth() === month && 
+            currentDate.getFullYear() === year) {
+            dayElement.classList.add('selected');
+        }
+        
+        datePickerGrid.appendChild(dayElement);
+    }
+    
+    // Next month days
+    const totalCells = 42;
+    const remainingCells = totalCells - (startingDay + daysInMonth);
+    for (let i = 1; i <= remainingCells; i++) {
+        const dayElement = createDatePickerDay(i, true);
+        datePickerGrid.appendChild(dayElement);
+    }
+}
+
+function createDatePickerDay(dayNumber, isOtherMonth) {
+    const dayElement = document.createElement('div');
+    dayElement.className = 'date-picker-day';
+    dayElement.textContent = dayNumber;
+    
+    if (isOtherMonth) {
+        dayElement.classList.add('other-month');
+    }
+    
+    dayElement.addEventListener('click', () => {
+        if (!isOtherMonth) {
+            currentDate = new Date(datePickerCurrentDate);
+            currentDate.setDate(dayNumber);
+            renderCalendar(currentDate);
+        }
+        datePicker.classList.remove('show');
+    });
+    
+    return dayElement;
 }
 
 // Setup event listeners
@@ -166,6 +268,43 @@ function setupEventListeners() {
     nextMonthBtn.addEventListener('click', () => {
         currentDate.setMonth(currentDate.getMonth() + 1);
         renderCalendar(currentDate);
+    });
+    
+    // Date picker functionality
+    monthDropdownTrigger.addEventListener('click', (e) => {
+        datePickerCurrentDate = new Date(currentDate);
+        datePicker.classList.toggle('show');
+        renderDatePicker();
+    });
+    
+    // Date picker navigation
+    datePrevMonth.addEventListener('click', () => {
+        datePickerCurrentDate.setMonth(datePickerCurrentDate.getMonth() - 1);
+        renderDatePicker();
+    });
+    
+    dateNextMonth.addEventListener('click', () => {
+        datePickerCurrentDate.setMonth(datePickerCurrentDate.getMonth() + 1);
+        renderDatePicker();
+    });
+    
+    // Today button
+    datePickerToday.addEventListener('click', () => {
+        currentDate = new Date();
+        renderCalendar(currentDate);
+        datePicker.classList.remove('show');
+    });
+    
+    // Close button
+    datePickerClose.addEventListener('click', () => {
+        datePicker.classList.remove('show');
+    });
+    
+    // Close date picker when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!monthDropdownTrigger.contains(e.target) && !datePicker.contains(e.target)) {
+            datePicker.classList.remove('show');
+        }
     });
     
     // Modal controls
@@ -228,6 +367,14 @@ function setupEventListeners() {
         setTimeout(() => {
             importModal.style.display = 'none';
         }, 300);
+    });
+    
+    // Delete event button
+    deleteEventBtn.addEventListener('click', () => {
+        const eventIndex = parseInt(deleteEventBtn.dataset.eventIndex);
+        if (!isNaN(eventIndex)) {
+            deleteEvent(eventIndex);
+        }
     });
     
     processImportBtn.addEventListener('click', () => {
@@ -302,47 +449,3 @@ function setupEventListeners() {
 
 // Initialize the calendar when page loads
 document.addEventListener('DOMContentLoaded', initCalendar);
-
-// Add to DOM Elements (at the top with other DOM elements)
-const deleteEventBtn = document.getElementById('deleteEventBtn');
-
-// Update showEventDetails function to include delete button
-function showEventDetails(event) {
-    document.getElementById('eventDetailsTitle').textContent = event.title;
-    document.getElementById('eventDetailsDate').textContent = new Date(event.date).toLocaleDateString();
-    document.getElementById('eventDetailsTime').textContent = event.time || 'All day';
-    document.getElementById('eventDetailsDescription').textContent = event.description || 'No description';
-    
-    const categoryBadge = document.getElementById('eventCategoryBadge');
-    categoryBadge.textContent = event.category.charAt(0).toUpperCase() + event.category.slice(1);
-    categoryBadge.className = `event-category category-${event.category}`;
-    
-    // Store the current event for deletion
-    deleteEventBtn.dataset.eventIndex = events.indexOf(event);
-    
-    eventDetailsModal.style.display = 'flex';
-    setTimeout(() => {
-        eventDetailsModal.classList.add('show');
-    }, 10);
-}
-
-// Add delete event function
-function deleteEvent(eventIndex) {
-    if (confirm('Are you sure you want to delete this event?')) {
-        events.splice(eventIndex, 1);
-        renderEvents();
-        eventDetailsModal.classList.remove('show');
-        setTimeout(() => {
-            eventDetailsModal.style.display = 'none';
-        }, 300);
-        alert('Event deleted successfully!');
-    }
-}
-
-// Add delete button event listener (add this to setupEventListeners function)
-deleteEventBtn.addEventListener('click', () => {
-    const eventIndex = parseInt(deleteEventBtn.dataset.eventIndex);
-    if (!isNaN(eventIndex)) {
-        deleteEvent(eventIndex);
-    }
-});
