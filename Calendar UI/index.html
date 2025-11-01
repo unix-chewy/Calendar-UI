@@ -73,6 +73,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- Moved buttons to calendar-controls -->
+                    <div class="calendar-actions">
+                        <button class="btn btn-primary" id="importAI">
+                            <i class="fas fa-robot"></i> Import AI
+                        </button>
+                        <button class="btn btn-secondary" id="addEvent">
+                            <i class="fas fa-plus"></i> Add Event
+                        </button>
+                    </div>
                 </div>
 
                 <div class="calendar">
@@ -90,14 +100,7 @@
                     </div>
                 </div>
                 
-                <div class="calendar-actions">
-                    <button class="btn btn-primary" id="importAI">
-                        <i class="fas fa-robot"></i> Import AI
-                    </button>
-                    <button class="btn btn-secondary" id="addEvent">
-                        <i class="fas fa-plus"></i> Add Event
-                    </button>
-                </div>
+                <!-- Removed the duplicate calendar-actions div from here -->
             </div>
         </div>
     </div>
@@ -136,6 +139,8 @@
                         <option value="meeting">Meeting</option>
                         <option value="health">Health</option>
                         <option value="social">Social</option>
+                        <option value="school">School</option>
+                        <option value="event">Event</option>
                     </select>
                 </div>
                 <div class="modal-footer">
@@ -191,8 +196,57 @@
                 <button type="button" class="btn btn-danger" id="deleteEventBtn">
                     <i class="fas fa-trash"></i> Delete Event
                 </button>
+                <button type="button" class="btn btn-primary" id="editEventBtn">
+                    <i class="fas fa-edit"></i> Edit Event
+                </button>
                 <button type="button" class="btn btn-secondary" id="closeEventDetailsBtn">Close</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Edit Event Modal -->
+    <div class="modal" id="editEventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Event</h3>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <form id="editEventForm">
+                <div class="form-group">
+                    <label for="editEventTitle">Event Title</label>
+                    <input type="text" id="editEventTitle" class="form-control" placeholder="Enter event title" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editEventDate">Date</label>
+                        <input type="date" id="editEventDate" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEventTime">Time</label>
+                        <input type="time" id="editEventTime" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="editEventDescription">Description</label>
+                    <textarea id="editEventDescription" class="form-control" rows="3" placeholder="Enter event description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editEventCategory">Category</label>
+                    <select id="editEventCategory" class="form-control" required>
+                        <option value="work">Work</option>
+                        <option value="personal">Personal</option>
+                        <option value="meeting">Meeting</option>
+                        <option value="health">Health</option>
+                        <option value="social">Social</option>
+                        <option value="school">School</option>
+                        <option value="event">Event</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Event</button>
+                </div>
+            </form>
         </div>
     </div>
 

@@ -2,6 +2,7 @@
 let currentDate = new Date();
 let events = [];
 let datePickerCurrentDate = new Date();
+let currentEditingEventId = null;
 
 // DOM Elements
 const calendarGrid = document.getElementById('calendarGrid');
@@ -13,15 +14,20 @@ const importAIBtn = document.getElementById('importAI');
 const eventModal = document.getElementById('eventModal');
 const importModal = document.getElementById('importModal');
 const eventDetailsModal = document.getElementById('eventDetailsModal');
+const editEventModal = document.getElementById('editEventModal');
 const closeModalBtn = document.getElementById('closeModal');
 const closeImportModalBtn = document.getElementById('closeImportModal');
 const closeEventDetails = document.getElementById('closeEventDetails');
 const closeEventDetailsBtn = document.getElementById('closeEventDetailsBtn');
+const closeEditModal = document.getElementById('closeEditModal');
 const cancelEventBtn = document.getElementById('cancelEvent');
 const cancelImportBtn = document.getElementById('cancelImport');
+const cancelEdit = document.getElementById('cancelEdit');
 const eventForm = document.getElementById('eventForm');
+const editEventForm = document.getElementById('editEventForm');
 const processImportBtn = document.getElementById('processImport');
 const deleteEventBtn = document.getElementById('deleteEventBtn');
+const editEventBtn = document.getElementById('editEventBtn');
 const monthDropdownTrigger = document.getElementById('currentMonth');
 const datePicker = document.getElementById('datePicker');
 const datePickerMonthYear = document.getElementById('datePickerMonthYear');
@@ -120,7 +126,7 @@ function renderEvents() {
     document.querySelectorAll('.event').forEach(event => event.remove());
     
     // Add events to their respective days
-    events.forEach(event => {
+    events.forEach((event, index) => {
         const eventDate = new Date(event.date);
         const dayElements = document.querySelectorAll('.calendar-day:not(.other-month)');
         
@@ -138,8 +144,11 @@ function renderEvents() {
                 eventElement.style.borderLeftColor = `var(--category-${event.category})`;
                 eventElement.style.backgroundColor = `var(--category-${event.category})20`;
                 
+                // Add event ID for editing
+                eventElement.dataset.eventId = index;
+                
                 eventElement.addEventListener('click', () => {
-                    showEventDetails(event);
+                    showEventDetails(event, index);
                 });
                 
                 eventsContainer.appendChild(eventElement);
@@ -149,7 +158,7 @@ function renderEvents() {
 }
 
 // Show event details in modal
-function showEventDetails(event) {
+function showEventDetails(event, eventIndex) {
     document.getElementById('eventDetailsTitle').textContent = event.title;
     document.getElementById('eventDetailsDate').textContent = new Date(event.date).toLocaleDateString();
     document.getElementById('eventDetailsTime').textContent = event.time || 'All day';
@@ -159,8 +168,9 @@ function showEventDetails(event) {
     categoryBadge.textContent = event.category.charAt(0).toUpperCase() + event.category.slice(1);
     categoryBadge.className = `event-category category-${event.category}`;
     
-    // Store the current event for deletion
-    deleteEventBtn.dataset.eventIndex = events.indexOf(event);
+    // Store the current event for deletion AND editing
+    deleteEventBtn.dataset.eventIndex = eventIndex;
+    currentEditingEventId = eventIndex; // Store for editing
     
     eventDetailsModal.style.display = 'flex';
     setTimeout(() => {
@@ -178,6 +188,56 @@ function deleteEvent(eventIndex) {
             eventDetailsModal.style.display = 'none';
         }, 300);
         alert('Event deleted successfully!');
+    }
+}
+
+// Edit event function
+function editEvent(eventIndex) {
+    const event = events[eventIndex];
+    
+    if (event) {
+        // Populate the edit form with current event data
+        document.getElementById('editEventTitle').value = event.title;
+        document.getElementById('editEventDate').value = event.date;
+        document.getElementById('editEventTime').value = event.time || '';
+        document.getElementById('editEventDescription').value = event.description || '';
+        document.getElementById('editEventCategory').value = event.category;
+        
+        // Show the edit modal
+        editEventModal.style.display = 'flex';
+        setTimeout(() => {
+            editEventModal.classList.add('show');
+        }, 10);
+    }
+}
+
+// Update event function
+function updateEvent(eventIndex) {
+    const event = events[eventIndex];
+    
+    if (event) {
+        // Update the event with new data
+        events[eventIndex] = {
+            ...event,
+            title: document.getElementById('editEventTitle').value,
+            date: document.getElementById('editEventDate').value,
+            time: document.getElementById('editEventTime').value,
+            description: document.getElementById('editEventDescription').value,
+            category: document.getElementById('editEventCategory').value
+        };
+        
+        // Re-render events
+        renderEvents();
+        
+        // Close modals
+        editEventModal.classList.remove('show');
+        eventDetailsModal.classList.remove('show');
+        setTimeout(() => {
+            editEventModal.style.display = 'none';
+            eventDetailsModal.style.display = 'none';
+        }, 300);
+        
+        alert('Event updated successfully!');
     }
 }
 
@@ -355,6 +415,13 @@ function setupEventListeners() {
         }, 300);
     });
     
+    closeEditModal.addEventListener('click', () => {
+        editEventModal.classList.remove('show');
+        setTimeout(() => {
+            editEventModal.style.display = 'none';
+        }, 300);
+    });
+    
     cancelEventBtn.addEventListener('click', () => {
         eventModal.classList.remove('show');
         setTimeout(() => {
@@ -369,11 +436,25 @@ function setupEventListeners() {
         }, 300);
     });
     
+    cancelEdit.addEventListener('click', () => {
+        editEventModal.classList.remove('show');
+        setTimeout(() => {
+            editEventModal.style.display = 'none';
+        }, 300);
+    });
+    
     // Delete event button
     deleteEventBtn.addEventListener('click', () => {
         const eventIndex = parseInt(deleteEventBtn.dataset.eventIndex);
         if (!isNaN(eventIndex)) {
             deleteEvent(eventIndex);
+        }
+    });
+    
+    // Edit event button
+    editEventBtn.addEventListener('click', () => {
+        if (currentEditingEventId !== null) {
+            editEvent(currentEditingEventId);
         }
     });
     
@@ -424,6 +505,14 @@ function setupEventListeners() {
         alert('Event added successfully!');
     });
     
+    // Edit form submission
+    editEventForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (currentEditingEventId !== null) {
+            updateEvent(currentEditingEventId);
+        }
+    });
+    
     // Close modals when clicking outside
     window.addEventListener('click', (e) => {
         if (e.target === eventModal) {
@@ -442,6 +531,12 @@ function setupEventListeners() {
             eventDetailsModal.classList.remove('show');
             setTimeout(() => {
                 eventDetailsModal.style.display = 'none';
+            }, 300);
+        }
+        if (e.target === editEventModal) {
+            editEventModal.classList.remove('show');
+            setTimeout(() => {
+                editEventModal.style.display = 'none';
             }, 300);
         }
     });

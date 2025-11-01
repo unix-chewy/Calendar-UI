@@ -282,12 +282,13 @@
 
 .calendar-actions {
     display: flex;
-    justify-content: center;
     gap: 15px;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    flex-shrink: 0;
+    /* Remove the old bottom positioning styles */
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+    /* Align with the month navigation */
+    align-items: center;
 }
 
 .btn {
@@ -345,6 +346,8 @@
     align-items: center;
     gap: 12px;
     position: relative;
+    /* Ensure proper vertical alignment */
+    height: 40px; /* Match button height */
 }
 
 .month-nav h3 {
@@ -354,6 +357,12 @@
     text-align: center;
     cursor: pointer;
     transition: var(--transition);
+    /* Ensure proper vertical centering */
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
 }
 
 .month-nav h3:hover {
