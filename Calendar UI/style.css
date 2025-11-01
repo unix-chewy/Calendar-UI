@@ -5,7 +5,6 @@
     font-family: 'Poppins', system-ui, -apple-system, sans-serif;
 }
 
-
 :root {
     /* Core Colors - Balanced Honey Gold Theme */
     --primary: #FFCE54;          /* True Honey Gold */
@@ -25,13 +24,92 @@
     --category-meeting: #FFD54F;  /* Bright Golden Honey */
     --category-health: #81C784;   /* Fresh Leaf Green */
     --category-social: #BA68C8;   /* Soft Orchid Purple */
-
 }
 
+/* Login Page Styles */
+.no-scroll {
+    margin: 0;
+    padding: 0;
+    background: var(--background);
+}
 
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    margin: 0;
+    padding: 20px;
+}
 
+.auth-card {
+    background: var(--surface);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 400px;
+}
 
+.auth-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
 
+.auth-header h1 {
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.auth-header p {
+    color: var(--text-light);
+}
+
+.auth-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    background: var(--accent);
+    border-radius: var(--radius);
+    padding: 4px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 12px;
+    text-align: center;
+    border: none;
+    background: transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+}
+
+.auth-tab.active {
+    background: var(--primary);
+    color: white;
+}
+
+.auth-form {
+    display: none;
+}
+
+.auth-form.active {
+    display: block;
+}
+
+.form-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.form-footer a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* Main Calendar Styles */
 .body-index {
     background-color: var(--background);
     color: var(--text);
@@ -181,26 +259,35 @@
     gap: 20px;
 }
 
-/* Floating Header */
-.header {
+/* Floating Calendar Container */
+.calendar-container {
     background-color: var(--surface);
     border-radius: var(--radius);
-    padding: 24px;
     box-shadow: var(--shadow);
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    height: 100%;
+}
+
+.calendar-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 24px;
+    flex-shrink: 0;
 }
 
-.header h2 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.header-controls {
+.calendar-actions {
     display: flex;
-    gap: 12px;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+    flex-shrink: 0;
 }
 
 .btn {
@@ -237,35 +324,27 @@
     transform: translateY(-2px);
 }
 
-/* Floating Calendar Container */
-.calendar-container {
-    background-color: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 24px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: 100%;
+.btn-danger {
+    background-color: #EF4444;
+    color: white;
 }
 
-
-
-.calendar-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 24px;
-    padding-top: 24px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    flex-shrink: 0;
+.btn-danger:hover {
+    background-color: #DC2626;
+    transform: translateY(-2px);
 }
 
+.btn-small {
+    padding: 8px 16px;
+    font-size: 12px;
+}
+
+/* Month Navigation & Date Picker */
 .month-nav {
     display: flex;
     align-items: center;
     gap: 12px;
+    position: relative;
 }
 
 .month-nav h3 {
@@ -273,6 +352,12 @@
     font-weight: 700;
     min-width: 200px;
     text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.month-nav h3:hover {
+    color: var(--primary);
 }
 
 .nav-btn {
@@ -295,35 +380,13 @@
     transform: scale(1.05);
 }
 
-.view-options {
-    display: flex;
-    gap: 8px;
-    background: var(--background);
-    padding: 6px;
-    border-radius: 12px;
+.mini-nav-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
 }
 
-.view-btn {
-    padding: 8px 16px;
-    border: none;
-    background: transparent;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-weight: 500;
-    font-size: 14px;
-}
-
-.view-btn.active {
-    background-color: var(--surface);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-/* Mini Calendar Dropdown */
-.month-nav {
-    position: relative;
-}
-
+/* Professional Date Picker */
 .date-picker-dropdown {
     display: none;
     position: absolute;
@@ -334,7 +397,7 @@
     border-radius: var(--radius);
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
     padding: 20px;
-    z-index: 100;
+    z-index: 1000;
     width: 320px;
     margin-top: 10px;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -357,12 +420,6 @@
     font-weight: 600;
     font-size: 16px;
     color: var(--text);
-}
-
-.mini-nav-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
 }
 
 .date-picker-weekdays {
@@ -420,13 +477,7 @@
     gap: 10px;
 }
 
-.btn-small {
-    padding: 8px 16px;
-    font-size: 12px;
-}
-
-
-/* Calendar Grid - With Scrollable Events */
+/* Calendar Grid */
 .calendar {
     display: flex;
     flex-direction: column;
@@ -454,13 +505,10 @@
     overflow-y: auto;
     min-height: 0;
     max-height: 100%;
-    
-    /* Custom scrollbar styling */
     scrollbar-width: thin;
     scrollbar-color: var(--primary) var(--background);
 }
 
-/* Custom scrollbar for Webkit browsers */
 .calendar-grid::-webkit-scrollbar {
     width: 8px;
 }
@@ -489,8 +537,6 @@
     min-height: 120px;
     overflow: hidden;
 }
-
-
 
 .calendar-day:nth-child(7n) {
     border-right: none;
@@ -528,8 +574,6 @@
     overflow-y: auto;
     min-height: 0;
     margin-top: 8px;
-    
-    /* Custom scrollbar for event containers */
     scrollbar-width: thin;
     scrollbar-color: var(--secondary) transparent;
 }
@@ -578,24 +622,30 @@
     background-color: #f9f9f9;
 }
 
-/* Scroll indicator for better UX */
-.scroll-indicator {
-    position: absolute;
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--primary);
-    color: white;
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 12px;
-    opacity: 0.8;
-    transition: var(--transition);
-    pointer-events: none;
+/* Category Colors for Events */
+.event.category-work {
+    border-left: 4px solid var(--category-work);
+    background-color: color-mix(in srgb, var(--category-work) 15%, transparent);
 }
 
-.scroll-indicator.hidden {
-    opacity: 0;
+.event.category-personal {
+    border-left: 4px solid var(--category-personal);
+    background-color: color-mix(in srgb, var(--category-personal) 15%, transparent);
+}
+
+.event.category-meeting {
+    border-left: 4px solid var(--category-meeting);
+    background-color: color-mix(in srgb, var(--category-meeting) 15%, transparent);
+}
+
+.event.category-health {
+    border-left: 4px solid var(--category-health);
+    background-color: color-mix(in srgb, var(--category-health) 15%, transparent);
+}
+
+.event.category-social {
+    border-left: 4px solid var(--category-social);
+    background-color: color-mix(in srgb, var(--category-social) 15%, transparent);
 }
 
 /* Modal Styles */
@@ -638,80 +688,6 @@
     color: #777;
 }
 
-/* Mini Calendar Dropdown */
-.month-dropdown-trigger {
-    cursor: pointer;
-    position: relative;
-    transition: var(--transition);
-}
-
-.month-dropdown-trigger:hover {
-    color: var(--primary);
-}
-
-.mini-calendar-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    z-index: 100;
-    width: 300px;
-    margin-top: 10px;
-}
-
-.mini-calendar-dropdown.show {
-    display: block;
-}
-
-.mini-calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.mini-calendar-header span {
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.mini-nav-btn {
-    width: 30px;
-    height: 30px;
-    font-size: 12px;
-}
-
-.mini-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-}
-
-.mini-month {
-    padding: 10px 5px;
-    text-align: center;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    font-size: 13px;
-    font-weight: 500;
-}
-
-.mini-month:hover {
-    background: var(--accent);
-    transform: scale(1.05);
-}
-
-.mini-month.current {
-    background: var(--primary);
-    color: white;
-}
-
 .form-group {
     margin-bottom: 20px;
 }
@@ -746,43 +722,7 @@
     margin-top: 20px;
 }
 
-/* Category Colors for Events */
-.event.category-work {
-    border-left: 4px solid var(--category-work);
-    background-color: color-mix(in srgb, var(--category-work) 15%, transparent);
-}
-
-.event.category-personal {
-    border-left: 4px solid var(--category-personal);
-    background-color: color-mix(in srgb, var(--category-personal) 15%, transparent);
-}
-
-.event.category-meeting {
-    border-left: 4px solid var(--category-meeting);
-    background-color: color-mix(in srgb, var(--category-meeting) 15%, transparent);
-}
-
-.event.category-health {
-    border-left: 4px solid var(--category-health);
-    background-color: color-mix(in srgb, var(--category-health) 15%, transparent);
-}
-
-.event.category-social {
-    border-left: 4px solid var(--category-social);
-    background-color: color-mix(in srgb, var(--category-social) 15%, transparent);
-}
-
-.btn-danger {
-    background-color: #EF4444;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #DC2626;
-    transform: translateY(-2px);
-}
-
-/* Responsive adjustments for scrollable calendar */
+/* Responsive Design */
 @media (max-width: 1200px) {
     .app-container {
         flex-direction: column;
@@ -833,25 +773,10 @@
         gap: 12px;
     }
     
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-    }
-    
-    .header-controls {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
     .calendar-controls {
         flex-direction: column;
         gap: 16px;
         align-items: flex-start;
-    }
-    
-    .view-options {
-        align-self: flex-end;
     }
     
     .calendar-grid {
@@ -866,10 +791,6 @@
     .event {
         font-size: 10px;
         padding: 4px 6px;
-    }
-    
-    .events-container {
-        margin-top: 4px;
     }
 }
 
@@ -895,103 +816,9 @@
         min-height: 70px;
         padding: 6px;
     }
-}
-
-/* Login Tab */
-.auth-container {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: var(--primary);
-    margin: 0;
-    padding: 20px;
-}
-
-        .auth-card {
-            background: var(--surface);
-            padding: 40px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 400px;
-        }
-
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .auth-header h1 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
-
-        .auth-header p {
-            color: var(--text-light);
-        }
-
-        .auth-tabs {
-            display: flex;
-            margin-bottom: 30px;
-            background: var(--accent);
-            border-radius: var(--radius);
-            padding: 4px;
-        }
-
-        .auth-tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border: none;
-            background: transparent;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-        }
-
-        .auth-tab.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .auth-form {
-            display: none;
-        }
-
-        .auth-form.active {
-            display: block;
-        }
-
-        .form-footer {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .form-footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-    .no-scroll {
-            margin: 0;
-            padding: 0;
-            background: var(--background);
-        }
     
-        /* Add position relative to month-nav */
-.month-nav {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    position: relative; /* Add this line */
+    .date-picker-dropdown {
+        width: 280px;
+        padding: 15px;
+    }
 }
-
-.month-nav h3 {
-    font-size: 22px;
-    font-weight: 700;
-    min-width: 200px;
-    text-align: center;
-}
-
