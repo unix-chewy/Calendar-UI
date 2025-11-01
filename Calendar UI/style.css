@@ -2,28 +2,35 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
 }
 
+
 :root {
-    --primary: #FFA500;          /* Honey Gold */
-    --secondary: #FFB74D;        /* Light Honey */
-    --background: #FFF9E6;       /* Warm Cream */
-    --accent: #FFF3CD;           /* Light Cream */
-    --surface: #FFFFFF;          /* White */
-    --text: #5D4037;            /* Dark Brown */
-    --text-light: #8D6E63;      /* Medium Brown */
-    --shadow: 0 10px 30px rgba(255, 165, 0, 0.15);
+    /* Core Colors - Balanced Honey Gold Theme */
+    --primary: #FFCE54;          /* True Honey Gold */
+    --secondary: #FFD97B;        /* Warm Golden Amber */
+    --background: #FFF8E6;       /* Soft Cream */
+    --accent: #FFF1C9;           /* Gentle Honey Glow */
+    --surface: #FFFFFF;          /* Clean White */
+    --text: #5C4033;             /* Warm Deep Brown */
+    --text-light: #8D6E5D;       /* Medium Brown */
+    --shadow: 0 8px 24px rgba(255, 206, 84, 0.18);
     --radius: 16px;
     --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    
-    /* Category Colors - Honeycomb inspired */
-    --category-work: #FFA500;      /* Honey Gold */
-    --category-personal: #FF9800;  /* Darker Honey */
-    --category-meeting: #FFB74D;   /* Light Honey */
-    --category-health: #8BC34A;    /* Leaf Green */
-    --category-social: #FFD54F;    /* Bright Honey */
+
+    /* Category Colors - Honeycomb Inspired */
+    --category-work: #FFB300;    /* Deep Honey Gold */
+    --category-personal: #FF7043; /* Warm Coral Amber */
+    --category-meeting: #FFD54F;  /* Bright Golden Honey */
+    --category-health: #81C784;   /* Fresh Leaf Green */
+    --category-social: #BA68C8;   /* Soft Orchid Purple */
+
 }
+
+
+
+
 
 .body-index {
     background-color: var(--background);
@@ -970,7 +977,7 @@
     .no-scroll {
             margin: 0;
             padding: 0;
-            background: var(--primary);
+            background: var(--background);
         }
     
         /* Add position relative to month-nav */
